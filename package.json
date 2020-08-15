@@ -1,0 +1,16 @@
+{
+  "name": "connection-cards-demo",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "client": "cd client && yarn start",
+    "server": "node server/index.js",
+    "build:client": "cd client && yarn build"
+  },
+  "repository": "git@github.com:vikeen/connection-cards-demo.git",
+  "author": "John Rake <john.rake12@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
