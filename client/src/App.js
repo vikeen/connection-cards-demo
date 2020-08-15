@@ -1,6 +1,10 @@
 import React from 'react';
 import axios from 'axios';
+import io from 'socket.io-client';
+
 import './devices.min.css';
+
+const socket = io('http://localhost:8080');
 
 function App() {
     const hitBackend = () => {

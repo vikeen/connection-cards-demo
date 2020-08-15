@@ -1,11 +1,12 @@
-const express = require('express')
-const app = express()
+const app = require('express')()
+const http = require('http').createServer(app);
+const io = require('socket.io')(http);
 const port = 8080
 
-app.set('view engine', 'html');
+io.on('connection', (socket) => {
+    console.log('a user connected');
+});
 
-app.use(express.static('public'))
-
-app.listen(port, () => {
+http.listen(port, () => {
     console.log(`listening at http://localhost:${port}`)
 })
