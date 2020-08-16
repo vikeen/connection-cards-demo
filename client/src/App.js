@@ -1,8 +1,12 @@
 import React, {useEffect, useState} from 'react';
+import io from "socket.io-client";
 
 import './devices.min.css';
 import ClientDevice from "./components/ClientDevice";
+import config from "./config";
 
+const {API_URL} = config
+const socket = io(API_URL)
 
 const App = () => {
     const [email, setEmail] = useState(null)
@@ -37,7 +41,7 @@ const App = () => {
                 </button>
             </div>
             {email && (
-                <ClientDevice email={email} key={email}/>
+                <ClientDevice email={email} key={email} socket={socket}/>
             )}
         </div>
     );

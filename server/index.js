@@ -2,6 +2,7 @@ const app = require('express')()
 const http = require('http').createServer(app);
 const io = require('socket.io')(http);
 const cors = require('cors');
+const uuidv4 = require('uuid').v4;
 const bodyParser = require('body-parser')
 const _ = require('lodash')
 const port = 8080
@@ -21,16 +22,29 @@ let userFriendsDb = [
     {userId: "f1844ef4-d6a0-4080-9808-ff78306e69fb", friendId: "5ad9003a-2fff-4308-bb33-e1d97b81a834"}
 ]
 
-let games = []
+let gamesDb = []
 
 io.on('connection', (socket) => {
     socket.on('invite-to-game', (invite) => {
+        invite.id = uuidv4()
         const user = findUserByEmail(invite.invitee.email)
+        const newGame = {
+            id: uuidv4(),
+            inviteId: invite.id,
+            playerOne: invite.inviter,
+            playerTwo: invite.invitee
+        }
         socket.to(user.socketId).emit('invite-to-game', invite)
+        gamesDb.push(newGame)
+        socket.join(`games:${newGame.id}`)
     })
-
-    socket.on('start-game', () => {
-        // games.push()
+    socket.on('accept-invite-to-game', (invite) => {
+        const game = findGameByInvite(invite)
+        socket.join(`games:${game.id}`)
+        io.to(`games:${game.id}`).emit('start-game', game)
+    })
+    socket.on('game:change-connection-score', (gameId, newConnectionScore) => {
+        socket.to(`games:${gameId}`).emit("game:change-connection-score", newConnectionScore)
     })
 })
 
@@ -82,4 +96,8 @@ const findUsersByIds = (ids = []) => {
 const findFriendsByUserId = (userId) => {
     const friendIds = userFriendsDb.filter(uf => uf.userId === userId).map(uf => uf.friendId)
     return findUsersByIds(friendIds)
+}
+
+const findGameByInvite = (invite) => {
+    return gamesDb.find(g => g.inviteId === invite.id)
 }

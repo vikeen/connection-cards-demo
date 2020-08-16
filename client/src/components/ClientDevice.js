@@ -1,41 +1,35 @@
 import React, {useEffect, useState} from "react"
-import io from 'socket.io-client'
 
 import Iphone8 from "./Iphone8"
 import FriendList from "./FriendList";
+import Game from "./Game";
 import services from "../services";
-import config from "../config";
 
-const {API_URL} = config
 
-const ClientDevice = ({email}) => {
+const ClientDevice = ({email, socket}) => {
     const [user, setUser] = useState([])
     const [friends, setFriends] = useState([])
     const [invite, setInvite] = useState(null)
-    const [otherPlayer, setOtherPlayer] = useState()
-    const [socket, setSocket] = useState()
-
-    useEffect(() => {
-        setSocket(io(API_URL))
-    }, [])
+    const [game, setGame] = useState(null)
 
     useEffect(() => {
         if (socket) {
-            socket.connect()
-            socket.on('invite-to-game', (invite) => setInvite(invite))
-            socket.on('connect', () => {
-                services.auth.login(email, socket).then((loggedInUser) => {
-                    setUser(loggedInUser)
-                    services.friends.query().then(setFriends)
-                })
+            services.auth.login(email, socket).then(user => {
+                setUser(user)
+                services.friends.query().then(setFriends)
             })
 
+            socket.on('invite-to-game', (invite) => setInvite(invite))
+            socket.on('start-game', (game) => {
+                setGame(game)
+                setInvite(null)
+            })
+            socket.on('client-log', console.log)
         }
     }, [socket])
 
-    const acceptInviteToGame = (newOtherPlayer) => {
-        setOtherPlayer(newOtherPlayer)
-        socket.emit("accept-invite-to-game", user, newOtherPlayer)
+    const acceptInviteToGame = () => {
+        socket.emit("accept-invite-to-game", invite)
     }
 
     const inviteToGame = (friend) => {
@@ -48,17 +42,22 @@ const ClientDevice = ({email}) => {
     return (
         <Iphone8>
             <div className="d-flex flex-column h-100">
-                <p className="text-center">{user.name}</p>
-                {invite && (
-                    <div className="alert alert-info text-center">
-                        <p>{invite.inviter.name} wants to play a game with you! Let's get connected!</p>
-                        <button onClick={() => acceptInviteToGame(invite)}
-                                className="btn btn-success btn-sm">
-                            Join Game
-                        </button>
+                {game && <Game user={user} game={game} socket={socket}/>}
+                {!game && (
+                    <div className="d-flex flex-column h-100">
+                        <p className="text-center">{user.name}</p>
+                        {invite && (
+                            <div className="alert alert-info text-center">
+                                <p>{invite.inviter.name} wants to play a game with you! Let's get connected!</p>
+                                <button onClick={() => acceptInviteToGame(invite)}
+                                        className="btn btn-success btn-sm">
+                                    Join Game
+                                </button>
+                            </div>
+                        )}
+                        <FriendList friends={friends} onPress={inviteToGame}/>
                     </div>
                 )}
-                <FriendList friends={friends} onPress={inviteToGame}/>
             </div>
         </Iphone8>
     )
