@@ -15,11 +15,27 @@ let usersDb = [{
     id: "f1844ef4-d6a0-4080-9808-ff78306e69fb",
     name: 'Brandi Wade',
     email: "bwade135@gmail.com"
+}, {
+    id: "24e2850d-546d-4b20-a212-6c805369e85a",
+    name: 'Austin Holt',
+    email: "austin.holt@gmail.com"
+}, {
+    id: "badcf0e3-e366-452a-ab37-386d8f97f24e",
+    name: 'Rachel Holt',
+    email: "rachel.holt@gmail.com"
 }]
 
 let userFriendsDb = [
+    // John
     {userId: "5ad9003a-2fff-4308-bb33-e1d97b81a834", friendId: "f1844ef4-d6a0-4080-9808-ff78306e69fb"},
-    {userId: "f1844ef4-d6a0-4080-9808-ff78306e69fb", friendId: "5ad9003a-2fff-4308-bb33-e1d97b81a834"}
+    {userId: "5ad9003a-2fff-4308-bb33-e1d97b81a834", friendId: "24e2850d-546d-4b20-a212-6c805369e85a"},
+    // Brandi
+    {userId: "f1844ef4-d6a0-4080-9808-ff78306e69fb", friendId: "5ad9003a-2fff-4308-bb33-e1d97b81a834"},
+    // Austin
+    {userId: "24e2850d-546d-4b20-a212-6c805369e85a", friendId: "5ad9003a-2fff-4308-bb33-e1d97b81a834"},
+    {userId: "24e2850d-546d-4b20-a212-6c805369e85a", friendId: "badcf0e3-e366-452a-ab37-386d8f97f24e"},
+    // Rachel
+    {userId: "badcf0e3-e366-452a-ab37-386d8f97f24e", friendId: "24e2850d-546d-4b20-a212-6c805369e85a"},
 ]
 
 let gamesDb = []

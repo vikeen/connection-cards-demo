@@ -22,9 +22,9 @@ const App = () => {
 
     const buttonClasses = (buttonEmail) => {
         if (email === buttonEmail) {
-            return "btn btn-secondary"
+            return "btn btn-secondary btn-sm"
         } else {
-            return "btn btn-light"
+            return "btn btn-light btn-sm"
         }
     }
 
@@ -38,6 +38,14 @@ const App = () => {
                 <button type="button" className={buttonClasses("bwade135@gmail.com")}
                         onClick={() => onClickUser("bwade135@gmail.com")}>
                     Brandi Wade
+                </button>
+                <button type="button" className={buttonClasses("austin.holt@gmail.com")}
+                        onClick={() => onClickUser("austin.holt@gmail.com")}>
+                    Austin Holt
+                </button>
+                <button type="button" className={buttonClasses("rachel.holt@gmail.com")}
+                        onClick={() => onClickUser("rachel.holt@gmail.com")}>
+                    Rachel Holt
                 </button>
             </div>
             {email && (
